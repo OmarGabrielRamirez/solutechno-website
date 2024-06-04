@@ -15,6 +15,11 @@
     // Initiate the wowjs
     new WOW().init();
 
+    (function(){
+        emailjs.init({
+          publicKey: "gSik_QlHA2ix8XaZc",
+        });
+     })();
 
     // Sticky Navbar
     $(window).scroll(function () {
@@ -45,7 +50,7 @@
     $('.btn-play').click(function () {
         $videoSrc = $(this).data("src");
     });
-    console.log($videoSrc);
+
     $('#videoModal').on('shown.bs.modal', function (e) {
         $("#video").attr('src', $videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0");
     })
@@ -81,6 +86,62 @@
                 items:3
             }
         }
+    });
+
+    $(document).ready(function(){
+        $('#submit-button').click(function(event){
+            event.preventDefault();
+
+            $('.error-label').hide();
+            $('.form-control').removeClass('error-input');
+
+            var valid = true;
+
+            if($('#name').val().trim() === ''){
+                $('#name-error').show();
+                $('#name').addClass('error-input');
+                valid = false;
+            }
+            if($('#mail').val().trim() === ''){
+                $('#mail-error').show();
+                $('#mail').addClass('error-input');
+                valid = false;
+            }
+            if($('#mobile').val().trim() === ''){
+                $('#mobile-error').show();
+                $('#mobile').addClass('error-input');
+                valid = false;
+            }
+            if($('#service').val().trim() === ''){
+                $('#service-error').show();
+                $('#service').addClass('error-input');
+                valid = false;
+            }
+            if($('#message').val().trim() === ''){
+                $('#message-error').show();
+                $('#message').addClass('error-input');
+                valid = false;
+            }
+
+            if(valid){
+                var templateParams = {
+                    name: $('#name').val(),
+                    mail: $('#mail').val(),
+                    mobile: $('#mobile').val(),
+                    service: $('#service').val(),
+                    message: $('#message').val()
+                };
+
+                emailjs.send('service_ukccpdf', 'template_6v7uewn', templateParams)
+                    .then(function(response) {
+                        alert('Correo enviado con éxito');
+                        console.log('SUCCESS!', response.status, response.text);
+                    }, function(error) {
+                        alert('Error al enviar el correo');
+                        console.log('FAILED...', error);
+                    });
+            }
+        });
     });
     
 })(jQuery);

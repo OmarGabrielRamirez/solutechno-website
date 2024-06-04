@@ -602,3 +602,11 @@
 .copyright a:hover {
     color: var(--primary) !important;
 }
+.error-label {
+    color: red;
+    font-size: 12px;
+    display: none;
+}
+.error-input {
+    border-color: red;
+}

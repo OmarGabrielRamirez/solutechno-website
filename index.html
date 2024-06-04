@@ -6,7 +6,10 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
-
+    
+    <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
@@ -392,24 +395,28 @@
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="name" placeholder="Your Name">
                                 <label for="name">Nombre</label>
+                                <span class="error-label" id="name-error">Este campo es obligatorio</span>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-floating">
                                 <input type="email" class="form-control" id="mail" placeholder="Your Email">
                                 <label for="mail">Correo electrónico</label>
+                                <span class="error-label" id="mail-error">Este campo es obligatorio</span>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="mobile" placeholder="Your Mobile">
                                 <label for="mobile">Teléfono</label>
+                                <span class="error-label" id="mobile-error">Este campo es obligatorio</span>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="service" placeholder="Your Mobile">
                                 <label for="mobile">Servicio</label>
+                                <span class="error-label" id="service-error">Este campo es obligatorio</span>
                             </div>
                         </div>
                         <div class="col-12">
@@ -418,10 +425,13 @@
                                     style="height: 130px">
                                 </textarea>
                                 <label for="message">Mensaje</label>
+                                <span class="error-label" id="message-error">Este campo es obligatorio</span>
+                           
+                                
                             </div>
                         </div>
                         <div class="col-12 text-center">
-                            <button class="btn btn-primary w-100 py-3" type="submit">Submit Now</button>
+                            <button class="btn btn-primary w-100 py-3" type="submit" id="submit-button">Submit Now</button>
                         </div>
                     </div>
                 </div>

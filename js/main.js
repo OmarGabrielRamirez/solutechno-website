@@ -89,6 +89,7 @@
     });
 
     $(document).ready(function(){
+        
         $('#submit-button').click(function(event){
             event.preventDefault();
 

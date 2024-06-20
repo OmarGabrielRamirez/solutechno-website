@@ -182,7 +182,10 @@
         object-fit: cover;
     }
 }
-
+.page-header-redes {
+    background: linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)), url(../img/manejoredes2.jpg) center center no-repeat;
+    background-size: cover;
+}
 .page-header {
     background: linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)), url(../img/carousel-1.jpg) center center no-repeat;
     background-size: cover;
@@ -309,6 +312,7 @@
 
 
 /*** Service ***/
+
 .service-item .service-text {
     position: relative;
     width: 100%;

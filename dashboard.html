@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interacciones totales de una página de Facebook</title>
+    <!-- Incluye el SDK de JavaScript de Facebook -->
+    <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+</head>
+<body>
+    <h1>Interacciones totales de una página de Facebook</h1>
+    <div id="totalInteractions"></div>
+
+    <script>
+        // Inicializa el SDK de JavaScript de Facebook
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '1739084429831688',
+                cookie     : true,
+                xfbml      : true,
+                version    : 'v12.0' // Usa la última versión estable de la API
+            });
+
+            // Llama a la función para obtener las interacciones totales
+            getTotalInteractions();
+        };
+
+        // Función para obtener las interacciones totales de la página
+        function getTotalInteractions() {
+            // Reemplaza 'page-id' con el ID de la página que deseas consultar
+            FB.api('/page-id/posts', { fields: 'id,likes.summary(true),comments.summary(true),shares', access_token: '1739084429831688|3QCQ8PYFqMvPGoSZzA7eaiZeKv0' }, function(response) {
+                if (response && !response.error) {
+                    console.log(response);
+
+                    // Inicializa variables para rastrear las interacciones totales
+                    var totalLikes = 0;
+                    var totalComments = 0;
+                    var totalShares = 0;
+
+                    // Itera sobre todas las publicaciones y suma las interacciones
+                    response.data.forEach(function(post) {
+                        // Suma los likes totales
+                        totalLikes += (post.likes ? post.likes.summary.total_count : 0);
+
+                        // Suma los comentarios totales
+                        totalComments += (post.comments ? post.comments.summary.total_count : 0);
+
+                        // Suma los compartidos totales
+                        totalShares += (post.shares ? post.shares.count : 0);
+                    });
+
+                    // Calcula el total de interacciones
+                    var totalInteractions = totalLikes + totalComments + totalShares;
+
+                    // Muestra el total de interacciones en el HTML
+                    document.getElementById('totalInteractions').innerHTML = `
+                        <h2>Interacciones totales</h2>
+                        <p><strong>Total de Me gusta:</strong> ${totalLikes}</p>
+                        <p><strong>Total de Comentarios:</strong> ${totalComments}</p>
+                        <p><strong>Total de Compartidos:</strong> ${totalShares}</p>
+                        <p><strong>Total de Interacciones:</strong> ${totalInteractions}</p>
+                    `;
+                } else {
+                    console.error(response.error);
+                }
+            });
+        }
+
+        // Carga el SDK de JavaScript de Facebook
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+</body>
+</html>

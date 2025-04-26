@@ -33,7 +33,38 @@
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 </head>
-
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const title = document.querySelector(".display-2");
+        const text = title.textContent;
+        title.textContent = ""; // Limpia el contenido original
+    
+        text.split("").forEach((letter, index) => {
+            const span = document.createElement("span");
+    
+            if (letter === " ") {
+                span.innerHTML = "&nbsp;"; // Espacio real
+            } else {
+                span.textContent = letter;
+            }
+    
+            span.style.display = "inline-block";
+            span.style.opacity = 0;
+            span.style.transform = "translateY(-20px)";
+            span.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+            span.style.transitionDelay = `${index * 0.05}s`; // Separación de 50ms entre letras
+            title.appendChild(span);
+    
+            // Fuerza reflow para activar la animación
+            setTimeout(() => {
+                span.style.opacity = 1;
+                span.style.transform = "translateY(0)";
+            }, 100);
+        });
+    });
+    </script>
+    
+    
 <body>
     <!-- Spinner Start -->
     <div id="spinner"
@@ -54,16 +85,20 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav">
-                        <a href="manejo-redes-sociales.html" class="nav-item nav-link active">Inicio</a>
+                        <a href="index.html" class="nav-item nav-link active">
+                            <i class="fas fa-arrow-left me-2"></i> Regresar
+                        </a>
                     </div>
                     <div class="ms-auto d-none d-lg-block">
                         <img class="navbar_icon" src="img/icon.png" alt="Image">
                     </div>
                 </div>
+                
             </nav>
         </div>
     </div>
     <!-- Navbar End -->
+
 
     <!-- Page Header Start -->
     <div class="container-fluid page-header-redes py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">

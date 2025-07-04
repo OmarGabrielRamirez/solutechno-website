@@ -1,445 +1,612 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
-    <meta charset="utf-8">
-    <title> Solutechno - Tecnología y Marketing </title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
+  <head>
+    <meta charset="utf-8" />
+    <title>Solutechno - Tecnología y Marketing</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="" name="keywords" />
+    <meta content="" name="description" />
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+    <link href="img/favicon.ico" rel="icon" />
 
     <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&family=Roboto:wght@500;700&display=swap"
-        rel="stylesheet">
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&family=Roboto:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/animate/animate.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link href="lib/animate/animate.min.css" rel="stylesheet" />
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
-</head>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const title = document.querySelector(".display-2");
-        const text = title.textContent;
-        title.textContent = ""; // Limpia el contenido original
-    
-        text.split("").forEach((letter, index) => {
-            const span = document.createElement("span");
-    
-            if (letter === " ") {
-                span.innerHTML = "&nbsp;"; // Espacio real
-            } else {
-                span.textContent = letter;
-            }
-    
-            span.style.display = "inline-block";
-            span.style.opacity = 0;
-            span.style.transform = "translateY(-20px)";
-            span.style.transition = "opacity 0.3s ease, transform 0.3s ease";
-            span.style.transitionDelay = `${index * 0.05}s`; // Separación de 50ms entre letras
-            title.appendChild(span);
-    
-            // Fuerza reflow para activar la animación
-            setTimeout(() => {
-                span.style.opacity = 1;
-                span.style.transform = "translateY(0)";
-            }, 100);
+    <link href="css/style.css" rel="stylesheet" />
+    <!-- Firebase App (obligatorio) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-remote-config-compat.js"></script>
+  </head>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const title = document.querySelector(".display-3");
+      const text = title.textContent;
+      title.textContent = ""; // Limpia el contenido original
+
+      text.split("").forEach((letter, index) => {
+        const span = document.createElement("span");
+
+        if (letter === " ") {
+          span.innerHTML = "&nbsp;"; // Espacio real
+        } else {
+          span.textContent = letter;
+        }
+
+        span.style.display = "inline-block";
+        span.style.opacity = 0;
+        span.style.transform = "translateY(-20px)";
+        span.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+        span.style.transitionDelay = `${index * 0.05}s`; // Separación de 50ms entre letras
+        title.appendChild(span);
+
+        // Fuerza reflow para activar la animación
+        setTimeout(() => {
+          span.style.opacity = 1;
+          span.style.transform = "translateY(0)";
+        }, 100);
+      });
+    });
+  </script>
+
+  <script>
+    // Inicializa Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAICa1SX2Ja5ETOTAX7Gqx7cX6-8UxhHPo",
+      authDomain: "solutechno-sit.firebaseapp.com",
+      projectId: "solutechno-sit",
+      storageBucket: "solutechno-sit.firebasestorage.app",
+      messagingSenderId: "349733806204",
+      appId: "1:349733806204:web:690cb32f90db546c2469f9",
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const remoteConfig = firebase.remoteConfig();
+
+    // Configuración para desarrollo (sin caché)
+    remoteConfig.settings = {
+      minimumFetchIntervalMillis: 0,
+    };
+
+    // Valor por defecto
+    remoteConfig.defaultConfig = {
+      social_packages: "[]",
+    };
+
+    // Función para pintar los paquetes
+    function renderPackages(packages) {
+      const container = document.getElementById("packagesContainer");
+      container.innerHTML = ""; // Limpia antes de insertar
+
+      packages.forEach((pkg) => {
+        const card = document.createElement("div");
+        card.className = "col-lg-4 col-md-6 wow fadeInUp";
+        card.setAttribute("data-wow-delay", "0.1s");
+
+        card.innerHTML = `
+  <div class="service-item position-relative border border-primary rounded-3 shadow-lg overflow-hidden h-100">
+    <div class="service-text bg-white rounded-3 d-flex flex-column justify-content-between h-100">
+
+      <!-- Título superior -->
+      <div class="bg-dark text-white text-center py-3">
+        <h4 class="mb-0 text-uppercase fw-semibold text-white ">${
+          pkg.title
+        }</h4>
+      </div>
+
+      <!-- Detalles del paquete -->
+      <div class="px-4 py-4 text-start text-secondary small">
+        <p class="mb-3 d-flex align-items-center">
+          <i class="fas fa-check-circle text-success me-2 fs-5"></i>
+          <span><strong>${pkg.posts}</strong> Publicaciones</span>
+        </p>
+        <p class="mb-3 d-flex align-items-center">
+          <i class="fas fa-camera text-info me-2 fs-5"></i>
+          <span><strong>${pkg.stories}</strong> Historias</span>
+        </p>
+        <p class="mb-3 d-flex align-items-center">
+          <i class="fas fa-video text-danger me-2 fs-5"></i>
+          <span><strong>${pkg.reels}</strong> Reels</span>
+        </p>
+        <p class="mb-2 d-flex align-items-center">
+          <i class="fas fa-bullhorn ${
+            pkg.campaign_activation ? "text-success" : "text-muted"
+          } me-2 fs-5"></i>
+          <span>${
+            pkg.campaign_activation
+              ? "Con activación de campaña"
+              : "Sin activación de campaña"
+          }</span>
+        </p>
+      </div>
+
+      <!-- Precio inferior -->
+      <div class="bg-light text-center py-3">
+        <h3 class="text-primary fw-bold mb-0">
+          $${pkg.price !== undefined ? pkg.price : ""} MXN
+        </h3>
+      </div>
+
+    </div>
+  </div>
+`;
+
+        container.appendChild(card);
+      });
+    }
+
+    // Obtener paquetes desde Firebase Remote Config
+    document.addEventListener("DOMContentLoaded", () => {
+      remoteConfig
+        .fetchAndActivate()
+        .then(() => {
+          const rawData = remoteConfig.getString("social_packages");
+          const packages = JSON.parse(rawData);
+          renderPackages(packages);
+        })
+        .catch((err) => {
+          console.error("Error al obtener paquetes desde Remote Config:", err);
         });
     });
-    </script>
-    
-    
-<body>
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const counters = document.querySelectorAll(".counter");
+      const speed = 200; // menor número = más rápido
+
+      counters.forEach((counter) => {
+        const updateCount = () => {
+          const target = +counter.getAttribute("data-target");
+          const count = +counter.innerText;
+          const increment = target / speed;
+
+          if (count < target) {
+            counter.innerText = Math.ceil(count + increment);
+            setTimeout(updateCount, 15);
+          } else {
+            counter.innerText = target;
+          }
+        };
+
+        // Animar cuando el contador esté visible
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                updateCount();
+                observer.unobserve(counter); // Solo animar una vez
+              }
+            });
+          },
+          {
+            threshold: 1.0,
+          }
+        );
+
+        observer.observe(counter);
+      });
+    });
+  </script>
+
+  <body>
     <!-- Spinner Start -->
-    <div id="spinner"
-        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+    <div
+      id="spinner"
+      class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center"
+    >
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        style="width: 3rem; height: 3rem"
+      ></div>
     </div>
 
     <!-- Navbar Start -->
     <div class="container-fluid bg-white sticky-top">
-        <div class="container">
-            <nav class="navbar navbar-expand-lg bg-white navbar-light p-lg-0">
-                <a href="index.html" class="navbar-brand d-lg-none">
-                    <img class="navbar_icon" src="img/icon.png" alt="Image">
-                </a>
-                <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse"
-                    data-bs-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <div class="navbar-nav">
-                        <a href="index.html" class="nav-item nav-link active">
-                            <i class="fas fa-arrow-left me-2"></i> Regresar
-                        </a>
-                    </div>
-                    <div class="ms-auto d-none d-lg-block">
-                        <img class="navbar_icon" src="img/icon.png" alt="Image">
-                    </div>
-                </div>
-                
-            </nav>
-        </div>
+      <div class="container">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light p-lg-0">
+          <a href="index.html" class="navbar-brand d-lg-none">
+            <img class="navbar_icon" src="img/icon.png" alt="Image" />
+          </a>
+          <button
+            type="button"
+            class="navbar-toggler me-0"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarCollapse"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav">
+              <a href="index.html" class="nav-item nav-link active">
+                <i class="fas fa-arrow-left me-2"></i> Regresar
+              </a>
+            </div>
+            <div class="ms-auto d-none d-lg-block">
+              <img class="navbar_icon" src="img/icon.png" alt="Image" />
+            </div>
+          </div>
+        </nav>
+      </div>
     </div>
     <!-- Navbar End -->
 
-
     <!-- Page Header Start -->
-    <div class="container-fluid page-header-redes py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container text-center py-5">
-            <h1 class="display-2 text-white mb-4 animated slideInDown">Marketing en Redes Sociales</h1>
-            <nav aria-label="breadcrumb animated slideInDown">
-            </nav>
+    <div
+      class="container-fluid page-header-redes p-0 mb-5 wow fadeIn"
+      data-wow-delay="0.1s"
+    >
+      <div
+        id="headerCarousel"
+        class="carousel slide"
+        data-bs-ride="carousel"
+        data-bs-interval="2500"
+      >
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div
+              class="header-slide"
+              style="background-image: url('img/images/manejoredes1.jpg')"
+            ></div>
+          </div>
+          <div class="carousel-item">
+            <div
+              class="header-slide"
+              style="background-image: url('img/images/manejoredes3.jpg')"
+            ></div>
+          </div>
+          <div class="carousel-item">
+            <div
+              class="header-slide"
+              style="background-image: url('img/images/manejoredes4.jpg')"
+            ></div>
+          </div>
         </div>
+      </div>
+
+      <div
+        class="container text-center py-5 position-absolute top-50 start-50 translate-middle"
+      >
+        <h1 class="display-3 text-white mb-4 animated slideInDown">
+          Marketing en Redes Sociales
+        </h1>
+        <nav aria-label="breadcrumb" class="animated slideInDown"></nav>
+      </div>
     </div>
+
     <!-- Page Header End -->
-
-    
-    <!-- Service Start -->
     <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <p class="fs-5 fw-medium text-primary">Servicio - Manejo Redes Sociales</p>
-                <p class="fs-5 fw-medium text-primary"></p>
-                <h1 class="display-5 mb-5">¿Qué incluye?</h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-3 col-md-6 wow  fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item position-relative">
-                        <div class="service-text rounded p-5" style="height: 200px !important;">
-                            <div class="btn-square bg-light rounded-circle mx-auto mb-4"
-                              style="width: 54px; height: 54px;">
-                                <img class="img-fluid" src="img/icon/planif.png" alt="Icon">
-                            </div>
-                            <h5 class="mb-3">Planificación Mensual</h5>
-
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item position-relative">
-                        <div class="service-text rounded p-5" style="height: 200px !important;">
-                            <div class="btn-square bg-light rounded-circle mx-auto mb-4"
-                                style="width: 64px; height: 64px;">
-                                <img class="img-fluid" src="img/icon/design.png" alt="Icon">
-                            </div>
-                            <h5 class="mb-3">Diseño Creativo</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6  wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item position-relative">
-                        <div class="service-text rounded p-5" style="height: 200px !important;">
-                            <div class="btn-square rounded-circle mx-auto mb-4"
-                                style="width: 64px; height: 64px;">
-                                <img class="img-fluid" src="img/icon/copy.png" alt="Icon">
-                            </div>
-                            <h5 class="mb-3">Copywriting</h5>
-
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item position-relative">
-                        <div class="service-text rounded p-5" style="height: 200px !important;">
-                            <div class="btn-square bg-light rounded-circle mx-auto mb-4"
-                                style="width: 64px; height: 64px;">
-                                <img class="img-fluid" src="img/icon/icon-7.png" alt="Icon">
-                            </div>
-                            <h5 class="mb-3">Administración de campaña </h4>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+      <div class="container">
+        <div
+          class="text-center mx-auto wow fadeInUp"
+          data-wow-delay="0.1s"
+          style="max-width: 600px"
+        >
+          <p class="fs-5 fw-medium text-primary">Resultados</p>
+          <h1 class="display-5 mb-5">Más de 50 empresas confían en nosotros</h1>
         </div>
+
+        <div class="row g-4 text-center">
+          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="result-item p-4 border rounded">
+              <h5 class="mb-3">
+                <span class="counter" data-target="50">0</span>+ Clientes
+                Satisfechos
+              </h5>
+              <p>
+                Empresas que han mejorado su presencia digital con nuestro
+                apoyo.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
+            <div class="result-item p-4 border rounded h-100">
+              <h5 class="mb-3">
+                <span class="counter" data-target="200">0</span>+ Redes
+                Administradas
+              </h5>
+              <p>
+                Gestionamos estrategias en Facebook, Instagram, TikTok y más.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+            <div class="result-item p-4 border rounded h-100">
+              <h5 class="mb-3">
+                <span class="counter" data-target="3000">0</span>+ Publicaciones
+                Mensuales
+              </h5>
+              <p>
+                Generamos contenido de alto impacto y optimizado para tu
+                audiencia.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
+            <div class="result-item p-4 border rounded h-100">
+              <h5 class="mb-3">Crecimiento Orgánico Constante</h5>
+              <p>Incremento real en seguidores y engagement mes a mes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Service Start -->
+    <div class="container-xxl py-5 bg-white">
+      <div class="container">
+        <div
+          class="text-center mx-auto mb-5 wow fadeInUp"
+          data-wow-delay="0.1s"
+          style="max-width: 600px"
+        >
+          <p class="fs-5 fw-semibold text-primary mb-2">Nuestros servicios</p>
+          <h1 class="display-6 fw-bold">¿Qué incluye?</h1>
+        </div>
+        <div class="row g-4 justify-content-center">
+          <!-- Card 1 -->
+          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div
+              class="service-item position-relative shadow-sm bg-light rounded h-100 text-center transition p-4"
+            >
+              <div
+                class="d-flex justify-content-center align-items-center bg-white rounded-circle mx-auto mb-3"
+                style="width: 70px; height: 70px"
+              >
+                <img
+                  src="img/icon/planif.png"
+                  alt="Planificación"
+                  class="img-fluid"
+                  style="width: 40px"
+                />
+              </div>
+              <h5 class="fw-bold mb-2">Planificación Mensual</h5>
+              <p class="text-muted small">
+                Organizamos tus contenidos y campañas estratégicamente cada mes.
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
+            <div
+              class="service-item position-relative shadow-sm bg-light rounded h-100 text-center transition p-4"
+            >
+              <div
+                class="d-flex justify-content-center align-items-center bg-white rounded-circle mx-auto mb-3"
+                style="width: 70px; height: 70px"
+              >
+                <img
+                  src="img/icon/design.png"
+                  alt="Diseño"
+                  class="img-fluid"
+                  style="width: 40px"
+                />
+              </div>
+              <h5 class="fw-bold mb-2">Diseño Creativo</h5>
+              <p class="text-muted small">
+                Diseños que captan la atención y refuerzan tu marca visualmente.
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+            <div
+              class="service-item position-relative shadow-sm bg-light rounded h-100 text-center transition p-4"
+            >
+              <div
+                class="d-flex justify-content-center align-items-center bg-white rounded-circle mx-auto mb-3"
+                style="width: 70px; height: 70px"
+              >
+                <img
+                  src="img/icon/copy.png"
+                  alt="Copywriting"
+                  class="img-fluid"
+                  style="width: 40px"
+                />
+              </div>
+              <h5 class="fw-bold mb-2">Copywriting</h5>
+              <p class="text-muted small">
+                Mensajes potentes, persuasivos y adaptados a tu audiencia.
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
+            <div
+              class="service-item position-relative shadow-sm bg-light rounded h-100 text-center transition p-4"
+            >
+              <div
+                class="d-flex justify-content-center align-items-center bg-white rounded-circle mx-auto mb-3"
+                style="width: 70px; height: 70px"
+              >
+                <img
+                  src="img/icon/icon-7.png"
+                  alt="Campañas"
+                  class="img-fluid"
+                  style="width: 40px"
+                />
+              </div>
+              <h5 class="fw-bold mb-2">Administración de Campañas</h5>
+              <p class="text-muted small">
+                Gestionamos, analizamos y optimizamos tus campañas activas.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Service End -->
-
     <div class="container-xxl p-5">
-        <div class="container">
-            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-
-                <h1 class="display-5 mb-5">Paquetes</h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6 wow  fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item position-relative">
-                        <div class="service-text rounded ">
-
-                            <div class="bg-dark pt-3 pb-2">
-                                <h4 class="mb-3 text-white">PAQUETE INICIAL</h4>
-                            </div>
-                            <div>
-                                <h5 class="mt-4">
-                                    6 Publicaciones
-                                </h5>
-                                <h5 class="mt-4 mb-4">
-                                    10 Historias
-                                </h5>
-                                <br>
-                                <br>
-                            </div>
-                            <div class="bg-light p-4">
-                                <h3 class="mb-3 text-black">$599</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 wow  fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item position-relative">
-                        <div class="service-text rounded ">
-
-                            <div class="bg-dark pt-3 pb-2">
-                                <h4 class="mb-3 text-white">PAQUETE BÁSICO</h4>
-                            </div>
-                            <div>
-                                <h5 class="mt-4">
-                                    6 Publicaciones
-                                </h5>
-                                <h5 class="mt-4 mb-4">
-                                    10 Historias
-                                </h5>
-                                <h5 class="mt-4 mb-4">
-                                    3 Reels
-                                </h5>
-                            </div>
-                            <div class="bg-light p-4 b-1">
-                                <h3 class="mb-3 text-black">$699</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow  fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item position-relative">
-                        <div class="service-text rounded ">
-
-                            <div class="bg-dark pt-3 pb-2">
-                                <h4 class="mb-3 text-white">PAQUETE PRO</h4>
-                            </div>
-                            <div>
-                                <h5 class="mt-4">
-                                    6 Publicaciones
-                                </h5>
-                                <h5 class="mt-4 mb-4">
-                                    30 Historias
-                                </h5>
-                                <h5 class="mt-4 mb-4">
-                                    4 Reels
-                                </h5>
-                            </div>
-                            <div class="bg-light p-4">
-                                <h3 class="mb-3 bold">$999</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+      <div class="container">
+        <div
+          class="text-center mx-auto wow fadeInUp"
+          data-wow-delay="0.1s"
+          style="max-width: 500px"
+        >
+          <h1 class="display-5 mb-5">Paquetes</h1>
         </div>
-    </div>
-    <!-- Service Start -->
-      <!-- 
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <h1 class="display-6 mb-5">Administramos tus redes en cuatro pasos:</h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-3 col-md-6 wow  fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item position-relative">
-                        <div class="service-text rounded p-5" style="height: 200px !important;">
-                            <div class="btn-square bg-light rounded-circle mx-auto mb-4"
-                                style="width: 64px; height: 64px;">
-                                <img class="img-fluid" src="img/icon/icon-7.png" alt="Icon">
-                            </div>
-                            <h5 class="mb-3">Planificación Mensual</h5>
-
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item position-relative">
-                        <div class="service-text rounded p-5" style="height: 200px !important;">
-                            <div class="btn-square bg-light rounded-circle mx-auto mb-4"
-                                style="width: 64px; height: 64px;">
-                                <img class="img-fluid" src="img/icon/icon-7.png" alt="Icon">
-                            </div>
-                            <h5 class="mb-3">Diseño Creativo</h5>
-
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6  wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item position-relative">
-                        <div class="service-text rounded p-5" style="height: 200px !important;">
-                            <div class="btn-square bg-light rounded-circle mx-auto mb-4"
-                                style="width: 64px; height: 64px;">
-                                <img class="img-fluid" src="img/icon/icon-7.png" alt="Icon">
-                            </div>
-                            <h5 class="mb-3">Copywriting</h5>
-
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item position-relative">
-                        <div class="service-text rounded p-5" style="height: 200px !important;">
-                            <div class="btn-square bg-light rounded-circle mx-auto mb-4"
-                                style="width: 64px; height: 64px;">
-                                <img class="img-fluid" src="img/icon/icon-7.png" alt="Icon">
-                            </div>
-                            <h5 class="mb-3">Administración de campaña </h4>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+        <div class="row g-4" id="packagesContainer">
+          <!-- Aquí se insertarán dinámicamente -->
         </div>
+      </div>
     </div>
-    -->
-
 
     <div class="container-xxl pt-5">
-        <div class="container">
-            <div class="text-center text-md-start pb-5 pb-md-0 wow fadeInUp" data-wow-delay="0.1s"
-                style="max-width: 500px;">
-                <h1 class="display-5 mb-5">Clientes</h1>
-            </div>
-            <div class="owl-carousel project-carousel wow fadeInUp" data-wow-delay="0.1s" id="projectsContainer">
-
-            </div>
-
+      <div class="container">
+        <div
+          class="text-center text-md-start pb-5 pb-md-0 wow fadeInUp"
+          data-wow-delay="0.30s"
+          style="max-width: 500px"
+        >
+          <h1 class="display-5 mb-5">Clientes</h1>
         </div>
+        <div
+          class="owl-carousel project-carousel wow fadeInUp"
+          data-wow-delay="0.30s"
+          id="projectsContainer"
+        ></div>
+      </div>
     </div>
     <div class="container-xxl pt-5">
         <div class="container">
-            <div class="text-center text-md-start pb-5 pb-md-0 wow fadeInUp" data-wow-delay="0.01s"
-                style="max-width: 500px;">
-                <h1 class="display-5 mb-5">Testimonios</h1>
+          <div class="text-center text-md-start pb-5 pb-md-0 wow fadeInUp" data-wow-delay="0.01s" style="max-width: 500px">
+            <h1 class="display-5 mb-5">Testimonios</h1>
+          </div>
+      
+          <div class="owl-carousel project-carousel wow fadeInUp" data-wow-delay="0.01s">
+            <!-- Testimonio 1 -->
+            <div class="project-item mb-5 shadow-sm rounded border border-primary bg-white">
+              <div class="p-4">
+                <a class="d-block h6 text-primary fw-semibold mb-2" href="https://www.facebook.com/laselectaMex">
+                  La Selecta Sabores de Sinaloa
+                </a>
+                <div class="testimonio-texto text-secondary small mb-3">
+                  Llegué con ustedes de casualidad y nos han apoyado mucho, el impacto que ha tenido en nuestras redes ha sido muy bueno, son muy responsables, en tiempos y todo, ningún inconveniente y han sabido resolver mis problemáticas, dudas y más!
+                </div>
+                <p class="clasificacion text-warning fs-5 mb-0">★★★★★</p>
+              </div>
             </div>
-            <div class="owl-carousel project-carousel wow fadeInUp" data-wow-delay="0.01s">
-                <div class="project-item mb-5">
-                    <div class="p-4">
-                        <a class="d-block h5" href="https://www.facebook.com/laselectaMex">La Selecta Sabores de Sinaloa</a>
-                        <p>Llegué con ustedes de casualidad y nos han apoyado mucho, el impacto que ha tenido en nuestras redes ha sido muy bueno, son muy responsables, en tiempos y todo, ningún inconveniente y han sabido resolver mis problemáticas, dudas y más!.</p>
-                        <p class="clasificacion">
-                            <label for="radio1">★</label>
-                            <label for="radio2">★</label>
-                            <label for="radio3">★</label>
-                            <label for="radio4">★</label>
-                            <label for="radio5">★</label>
-                        </p>
-                    </div>
+      
+            <!-- Testimonio 2 -->
+            <div class="project-item mb-5 shadow-sm rounded border border-primary bg-white">
+              <div class="p-4">
+                <a class="d-block h6 text-primary fw-semibold mb-2" href="https://www.facebook.com/profile.php?id=100092194569096">
+                  El Clóset de Yisus
+                </a>
+                <div class="testimonio-texto text-secondary small mb-3">
+                  Había intentado con algunos proveedores de manejo en redes sociales, pero ninguno pudo entender mis ideas para mi emprendimiento, hasta que pude encontrarlos, y la experiencia ha sido maravillosa, se han adecuado al mercado que voy dirigido, me han propuesto excelentes ideas que se han visto reflejadas monetaria mente en mis ventas, sus precios son real mente bajos de acuerdo a la calidad humana y de servicio que ofrecen. Muchas felicidades por su conocimiento, responsabilidad Y profesionalismo.
                 </div>
-                <div class="project-item mb-5">
-
-                    <div class="p-4">
-                        <a class="d-block h5" href="https://www.facebook.com/profile.php?id=100092194569096">El Clóset de Yisus</a>
-                        <p>Había intentado con algunos proveedores de manejo en redes sociales, pero ninguno pudo entender mis ideas para mi emprendimiento, hasta que pude encontrarlos, y la experiencia ha sido maravillosa, se han adecuado al mercado que voy dirigido, me han propuesto excelentes ideas que se han visto reflejadas monetaria mente en mis ventas, sus precios son real mente bajos de acuerdo a la calidad humana y de servicio que ofrecen.
-                            Muchas felicidades por su conocimiento, responsabilidad Y profesionalismo.</p>
-                        <p class="clasificacion">
-                            <label for="radio1">★</label>
-                            <label for="radio2">★</label>
-                            <label for="radio3">★</label>
-                            <label for="radio4">★</label>
-                            <label for="radio5">★</label>
-                        </p>
-                    </div>
-                </div>
-                <div class="project-item mb-5">
-                    <div class="position-relative">
-
-                    </div>
-                    <div class="p-4">
-                        <a class="d-block h5" href="https://www.facebook.com/profile.php?id=100063511994688">Taekwondo Moo Duk Kwan Centro</a>
-                        <p>Si buscas  manejo de tus redes sociales,para  incremento de seguidores,ventas o clientes solutechno cuenta con el mejor Servicio,calidad y eficiencia.
-                            La puntualidad en su organización es excelente,a un costo muy accesible,nosotros estamos muy contentos,ya que  mejoramos mucho a partir de estar asesorados por ellos.</p>
-                        <p class="clasificacion">
-                            <label for="radio1">★</label>
-                            <label for="radio2">★</label>
-                            <label for="radio3">★</label>
-                            <label for="radio4">★</label>
-                            <label for="radio5">★</label>
-                        </p>
-                    </div>
-                </div>
+                <p class="clasificacion text-warning fs-5 mb-0">★★★★★</p>
+              </div>
             </div>
+      
+            <!-- Testimonio 3 -->
+            <div class="project-item mb-5 shadow-sm rounded border border-primary bg-white">
+              <div class="p-4">
+                <a class="d-block h6 text-primary fw-semibold mb-2" href="https://www.facebook.com/profile.php?id=100063511994688">
+                  Taekwondo Moo Duk Kwan Centro
+                </a>
+                <div class="testimonio-texto text-secondary small mb-3">
+                  Si buscas manejo de tus redes sociales, para incremento de seguidores, ventas o clientes, solutechno cuenta con el mejor servicio, calidad y eficiencia. La puntualidad en su organización es excelente, a un costo muy accesible, nosotros estamos muy contentos, ya que mejoramos mucho a partir de estar asesorados por ellos.
+                </div>
+                <p class="clasificacion text-warning fs-5 mb-0">★★★★★</p>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
+      
+
 
     <div class="float-whatsapp">
-        <a href="https://wa.me/+52281288068" target="_blank" class=" btn-floating">
-            <i class="fab fa-whatsapp"></i> ¡Contáctanos!
-        </a>
+      <a href="https://wa.me/+52281288068" target="_blank" class="btn-floating">
+        <i class="fab fa-whatsapp"></i> ¡Contáctanos!
+      </a>
     </div>
     <!-- Footer Start -->
-    <div class="container-fluid bg-dark footer mt-5 py-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-3 col-md-6">
-                    <h4 class="text-white mb-4">Contacto</h4>
-                    <p class="mb-2 text-white "><i class="fa fa-phone-alt me-2"></i>+52 228 128 8068</p>
-                    <p class="mb-2 text-white "><i class="fa fa-envelope me-2"></i>ventas@solutechno.site</p>
-                    <div class="d-flex pt-3">
-
-                        <a class="btn btn-square btn-light rounded-circle me-2" href=""><i
-                                class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-square btn-light rounded-circle me-2" href=""><i
-                                class="fab fa-instagram"></i></a>
-                        <a class="btn btn-square btn-light rounded-circle me-2" href=""><i
-                                class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
+    <div
+      class="container-fluid bg-dark footer mt-5 py-5 wow fadeIn"
+      data-wow-delay="0.1s"
+    >
+      <div class="container py-5">
+        <div class="row g-5">
+          <div class="col-lg-3 col-md-6">
+            <h4 class="text-white mb-4">Contacto</h4>
+            <p class="mb-2 text-white">
+              <i class="fa fa-phone-alt me-2"></i>+52 228 128 8068
+            </p>
+            <p class="mb-2 text-white">
+              <i class="fa fa-envelope me-2"></i>ventas@solutechno.site
+            </p>
+            <div class="d-flex pt-3">
+              <a class="btn btn-square btn-light rounded-circle me-2" href=""
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a class="btn btn-square btn-light rounded-circle me-2" href=""
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a class="btn btn-square btn-light rounded-circle me-2" href=""
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
             </div>
+          </div>
         </div>
+      </div>
     </div>
     <!-- Footer End -->
 
-
     <!-- Copyright Start -->
     <div class="container-fluid copyright py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    &copy; <a class="fw-medium text-light" href="/index.html">Solutechno</a>, All Right Reserved.
-                </div>
-            </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+            &copy;
+            <a class="fw-medium text-light" href="/index.html">Solutechno</a>,
+            All Right Reserved.
+          </div>
         </div>
+      </div>
     </div>
     <!-- Copyright End -->
 
-
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i
-            class="bi bi-arrow-up"></i></a>
-
+    <a
+      href="#"
+      class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"
+      ><i class="bi bi-arrow-up"></i
+    ></a>
 
     <!-- JavaScript Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -453,20 +620,21 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script>
-        function fetchProjects() {
-          fetch('./mocks/clientes.json')
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Error al obtener el JSON');
-              }
-              return response.json();
-            })
-            .then(data => {
-              const projectsContainer = document.getElementById('projectsContainer');
-              data.forEach(project => {
-                const projectDiv = document.createElement('div');
-                projectDiv.classList.add('project-item', 'mb-5');
-                projectDiv.innerHTML = `
+      function fetchProjects() {
+        fetch("./mocks/clientes.json")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Error al obtener el JSON");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const projectsContainer =
+              document.getElementById("projectsContainer");
+            data.forEach((project) => {
+              const projectDiv = document.createElement("div");
+              projectDiv.classList.add("project-item", "mb-5");
+              projectDiv.innerHTML = `
                   <div class="position-relative">
                     <img class="img-fluid" src="${project.imagen}" alt="">
                     <div class="project-overlay">
@@ -482,45 +650,44 @@
                     <a class="d-block h6" href="${project.link}">${project.nombre}</a>
                   </div>
                 `;
-                projectsContainer.appendChild(projectDiv);
-              });
-      
-              // Inicializar Owl Carousel después de agregar los elementos
-              $(".project-carousel").owlCarousel({
-                autoplay: true,
-                smartSpeed: 1000,
-                margin: 25,
-                loop: true,
-                center: true,
-                dots: false,
-                nav: true,
-                navText: [
-                  '<i class="bi bi-chevron-left"></i>',
-                  '<i class="bi bi-chevron-right"></i>'
-                ],
-                responsive: {
-                  0: {
-                    items: 1
-                  },
-                  576: {
-                    items: 1
-                  },
-                  768: {
-                    items: 2
-                  },
-                  992: {
-                    items: 3
-                  }
-                }
-              });
-            })
-            .catch(error => {
-              console.error('Error:', error);
+              projectsContainer.appendChild(projectDiv);
             });
-        }
-      
-        document.addEventListener('DOMContentLoaded', fetchProjects);
-      </script>
-</body>
 
+            // Inicializar Owl Carousel después de agregar los elementos
+            $(".project-carousel").owlCarousel({
+              autoplay: true,
+              smartSpeed: 1000,
+              margin: 25,
+              loop: true,
+              center: true,
+              dots: false,
+              nav: true,
+              navText: [
+                '<i class="bi bi-chevron-left"></i>',
+                '<i class="bi bi-chevron-right"></i>',
+              ],
+              responsive: {
+                0: {
+                  items: 1,
+                },
+                576: {
+                  items: 1,
+                },
+                768: {
+                  items: 2,
+                },
+                992: {
+                  items: 3,
+                },
+              },
+            });
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", fetchProjects);
+    </script>
+  </body>
 </html>

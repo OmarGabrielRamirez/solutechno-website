@@ -241,6 +241,42 @@
     url(../img/manejoredes2.jpg) center center no-repeat;
   background-size: cover;
 }
+
+.page-header-redes {
+  position: relative;
+  height: 600px; /* Ajusta la altura según lo que necesites */
+  overflow: hidden;
+}
+
+.header-slide {
+  height: 600px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: darken;
+  background-color: rgba(0, 0, 0, 0.5); /* Capa oscura */
+}
+
+.carousel-inner {
+  height: 100%;
+}
+
+.carousel-item {
+  height: 100%;
+}
+
+.result-item {
+  background-color: #ffffff; /* Color de fondo normal */
+  transition: all 0.3s ease; /* Transición suave */
+}
+
+.result-item:hover {
+  background-color: #f8f9fa; /* Color al hacer hover (un gris muy clarito) */
+  transform: translateY(-10px); /* Se eleva */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Sombra al elevarse */
+}
+
+
 .page-header {
   background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
     url(../img/carousel-1.jpg) center center no-repeat;
@@ -269,7 +305,7 @@
 /*** About ***/
 .about {
   background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
-    url(../img/about.jpg) left center no-repeat;
+    url(../img/images/aboutus.jpg) left center no-repeat;
   background-size: cover;
 }
 
@@ -663,3 +699,25 @@
 .error-input {
   border-color: red;
 }
+
+.testimonio-texto {
+  height: 130px; 
+
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #999 #eee;
+  padding-right: 5px;
+}
+
+/* Scroll bonito para Webkit */
+.testimonio-texto::-webkit-scrollbar {
+  width: 8px;
+}
+.testimonio-texto::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 3px;
+}
+.testimonio-texto::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+}
+

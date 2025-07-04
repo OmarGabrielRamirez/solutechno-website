@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Facebook Fan Page</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f8f9fa; }
+    .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    #charts { display: flex; flex-wrap: wrap; gap: 20px; }
+    canvas { max-width: 400px; }
+  </style>
+</head>
+<body>
+
+  <h1>📊 Facebook Fan Page Dashboard</h1>
+
+  <div class="card">
+    <button onclick="loginWithFacebook()">🔐 Iniciar sesión con Facebook</button>
+    <p id="status">No autenticado</p>
+  </div>
+
+  <div class="card" id="kpis">
+    <h2>🔢 Métricas clave</h2>
+    <p><strong>Fans:</strong> <span id="fanCount">-</span></p>
+  </div>
+
+  <div class="card" id="charts">
+    <canvas id="engagementChart"></canvas>
+  </div>
+
+  <div class="card">
+    <h2>🧠 Análisis Automático (IA Simulada)</h2>
+    <p id="iaText">Cargando...</p>
+  </div>
+
+  <!-- Facebook SDK -->
+  <script>
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: '1739084429831688',
+        cookie: true,
+        xfbml: true,
+        version: 'v19.0'
+      });
+
+      FB.getLoginStatus(function (response) {
+        statusChangeCallback(response);
+      });
+    };
+
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/es_ES/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    function loginWithFacebook() {
+      FB.login(function (response) {
+        statusChangeCallback(response);
+      }, { scope: 'pages_show_list,pages_read_engagement' });
+    }
+
+    function statusChangeCallback(response) {
+      if (response.status === 'connected') {
+        document.getElementById('status').innerText = "Autenticado correctamente";
+        getPages(response.authResponse.accessToken);
+      } else {
+        document.getElementById('status').innerText = "No autenticado";
+      }
+    }
+
+    function getPages(token) {
+      FB.api('/me/accounts', function (response) {
+        const page = response.data[0]; // solo muestra la primera página
+        const pageId = page.id;
+        const pageToken = page.access_token;
+
+        FB.api(`/${pageId}?fields=fan_count`, 'GET', { access_token: pageToken }, function (res) {
+          document.getElementById('fanCount').innerText = res.fan_count;
+        });
+
+        // Datos de engagement simulados
+        const simulatedEngagement = {
+          labels: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+          data: [50, 80, 30, 100, 70]
+        };
+
+        renderChart(simulatedEngagement);
+        generateFakeIA(simulatedEngagement);
+      });
+    }
+
+    function renderChart(data) {
+      const ctx = document.getElementById('engagementChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'Interacciones por día',
+            data: data.data,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    function generateFakeIA(data) {
+      const max = Math.max(...data.data);
+      const bestDay = data.labels[data.data.indexOf(max)];
+      const summary = `Esta semana, el mejor día de interacción fue **${bestDay}** con ${max} interacciones. Se recomienda publicar más en ese día para mejorar el alcance.`;
+
+      document.getElementById('iaText').innerText = summary;
+    }
+  </script>
+
+</body>
+</html>
